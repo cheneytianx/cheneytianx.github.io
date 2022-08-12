@@ -3,15 +3,20 @@
         <title>Cheneytianx&#39;s Blog</title>
         <link>http://example.org/</link>
         <description>This is my cool site</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 24 Jul 2022 15:56:43 &#43;0800</lastBuildDate>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 18 Dec 2018 23:50:34 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
-    <title>Test</title>
-    <link>http://example.org/posts/test/</link>
-    <pubDate>Sun, 24 Jul 2022 15:56:43 &#43;0800</pubDate>
+    <title>我们为什么会生病</title>
+    <link>http://example.org/posts/2022/01/</link>
+    <pubDate>Tue, 18 Dec 2018 23:50:34 &#43;0800</pubDate>
     <author>Cheneytianx</author>
-    <guid>http://example.org/posts/test/</guid>
-    <description><![CDATA[第一篇测试文章 对引用内容的测试 git clone xxx 普通文字内容测试。 line 2 line3 更新]]></description>
+    <guid>http://example.org/posts/2022/01/</guid>
+    <description><![CDATA[演化医学，这个名词确实是第一次听说。本书作者主张从演化的视角审视人体、疾病和衰老，别开生面，启发思考。去年读过一本《消失的微生物》，其作者也是从主流医学中脱颖而出，将人体作为一个庞大的生态系统，其中的主角一种是人体细胞，另一种是被称为“朋友”的微生物。于是，现代的很多疾病，放在人体与微生物平衡下就非常容易解释了。
+医学确实博大精深，其中任何一个分支展开来都是一个无比庞大的领域。随着科学技术的发展，关于“我们为什么会生病？”这个问题，医学界似乎总在给出不同的答案。曾经很多疾病的治疗方法，现在已经被废弃了；曾经无法医治的疾病，现在有了可靠的解决办法；曾经被奉为“细菌克星”的抗生素，在超级细菌的出现后也要重新定义了。《我们为什么会生病》和《消失的微生物》这两本书所主张的观点算是很前沿的医学理论了，但是我们在医院所接受的临床治疗中却没有采用这样的理论。这两种理论仔细研究的话都非常有道理，而且还有正确的数据支持，那为什么在医学界找不到足够肯定的一种权威说法呢？
+不仅仅是医学，其他的自然学科都是如此。看完《三体》后，最让我震撼的就是其中给出的“农场主假说”和“射手假说”，展开来讲，就是这个意思：我们的所有科学理论都只是一种主观的模型。因为在我们有限的认知范围内他们经受住了检验，从而被贴上了“正确”的标签。随着人类认识世界的方式升级，当我们在更高的尺度上来衡量这些理论时，其中会有不少是站不住脚的，于是，新的“正确”的理论便会孕育而生。科学总是寻求发现和了解世界的新现象，研究和掌握新规律，总是在不断地寻求真理。
+前段时间读完 凯文·凯利的《失控》，其中描述的复杂系统，让人很受启发。医学所研究的问题其实就是弄清楚是什么导致了疾病，找到这个因果关系，当疾病发生之时，想办法破坏其中的“因”就能避免产生“果”。但是，在《失控》中描述的混沌系统里，其中的所有元素相互联结，构成了一张庞大的网络，其中一个点的扰动可能导致整个网络发生较大变动，在这样的情况下去寻找线性的因果关系基本上是不可能的。有的只是复杂和更加复杂。医学目前所研究的对象，可能就是一个这样的混沌系统，我们往往会根据简单的相关性分析就来推测因果关系，实施“对症下药”。可能调整好这根网络中的一根弦后，其他部分已经开始颤动了。
+ 今天的世界已经够复杂了，而明天的一切会变得更加复杂。 ——凯文·凯利《失控》
+ ]]></description>
 </item>
 </channel>
 </rss>
