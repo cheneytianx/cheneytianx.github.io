@@ -1,20 +1,48 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>读书 - Category - Cheneytianx&#39;s Blog</title>
+        <title>读书 - Category - Cheneytian&#39;s Blog</title>
         <link>http://example.org/categories/%E8%AF%BB%E4%B9%A6/</link>
-        <description>读书 - Category - Cheneytianx&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 18 Dec 2018 23:50:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E8%AF%BB%E4%B9%A6/" rel="self" type="application/rss+xml" /><item>
+        <description>读书 - Category - Cheneytian&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>yuchentianx@gmail.com (Cheneytian)</managingEditor>
+            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Sat, 20 Aug 2022 22:05:02 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E8%AF%BB%E4%B9%A6/" rel="self" type="application/rss+xml" /><item>
+    <title>我们为什么要睡觉</title>
+    <link>http://example.org/posts/2022/08/</link>
+    <pubDate>Sat, 20 Aug 2022 22:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2022/08/</guid>
+    <description><![CDATA[很久没有体会到小学暑假时，一觉睡到自然醒的那种神清气爽的感觉了。 步入中学之后，因为学习是第一优先级，良好的睡眠自然无法满足。读大学以后，节奏]]></description>
+</item>
+<item>
+    <title>贪婪的大脑</title>
+    <link>http://example.org/posts/2022/04/</link>
+    <pubDate>Fri, 17 Apr 2020 23:50:12 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2022/04/</guid>
+    <description><![CDATA[意识问题涉及广泛的学科领域。这本书从各个角度来讨论意识，从意识的起源一直探讨到意识怎样影响我们的行为，以及相关领域的研究成果怎样让每个人都受]]></description>
+</item>
+<item>
+    <title>认知突围</title>
+    <link>http://example.org/posts/2022/05/</link>
+    <pubDate>Fri, 03 May 2019 23:55:27 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2022/05/</guid>
+    <description><![CDATA[为什么有些人年纪轻轻，思想深度却远超常人？ 现在这个时代，我们缺少的不是信息，不是知识，而是认知。认知是人们获取信息，对信息加工和吸收的方式。]]></description>
+</item>
+<item>
+    <title>心智探奇</title>
+    <link>http://example.org/posts/2022/03/</link>
+    <pubDate>Sat, 27 Apr 2019 23:20:51 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2022/03/</guid>
+    <description><![CDATA[物质身体如何产生出有意识的心智？这个问题已经困扰了人们几个世纪。看过很多讨论过意识、大脑和心智的书，从凯文·凯利的《失控》到库兹韦尔的《机器]]></description>
+</item>
+<item>
     <title>我们为什么会生病</title>
     <link>http://example.org/posts/2022/01/</link>
     <pubDate>Tue, 18 Dec 2018 23:50:34 &#43;0800</pubDate>
-    <author>Cheneytianx</author>
+    <author>Cheneytian</author>
     <guid>http://example.org/posts/2022/01/</guid>
-    <description><![CDATA[演化医学，这个名词确实是第一次听说。本书作者主张从演化的视角审视人体、疾病和衰老，别开生面，启发思考。去年读过一本《消失的微生物》，其作者也是从主流医学中脱颖而出，将人体作为一个庞大的生态系统，其中的主角一种是人体细胞，另一种是被称为“朋友”的微生物。于是，现代的很多疾病，放在人体与微生物平衡下就非常容易解释了。
-医学确实博大精深，其中任何一个分支展开来都是一个无比庞大的领域。随着科学技术的发展，关于“我们为什么会生病？”这个问题，医学界似乎总在给出不同的答案。曾经很多疾病的治疗方法，现在已经被废弃了；曾经无法医治的疾病，现在有了可靠的解决办法；曾经被奉为“细菌克星”的抗生素，在超级细菌的出现后也要重新定义了。《我们为什么会生病》和《消失的微生物》这两本书所主张的观点算是很前沿的医学理论了，但是我们在医院所接受的临床治疗中却没有采用这样的理论。这两种理论仔细研究的话都非常有道理，而且还有正确的数据支持，那为什么在医学界找不到足够肯定的一种权威说法呢？
-不仅仅是医学，其他的自然学科都是如此。看完《三体》后，最让我震撼的就是其中给出的“农场主假说”和“射手假说”，展开来讲，就是这个意思：我们的所有科学理论都只是一种主观的模型。因为在我们有限的认知范围内他们经受住了检验，从而被贴上了“正确”的标签。随着人类认识世界的方式升级，当我们在更高的尺度上来衡量这些理论时，其中会有不少是站不住脚的，于是，新的“正确”的理论便会孕育而生。科学总是寻求发现和了解世界的新现象，研究和掌握新规律，总是在不断地寻求真理。
-前段时间读完 凯文·凯利的《失控》，其中描述的复杂系统，让人很受启发。医学所研究的问题其实就是弄清楚是什么导致了疾病，找到这个因果关系，当疾病发生之时，想办法破坏其中的“因”就能避免产生“果”。但是，在《失控》中描述的混沌系统里，其中的所有元素相互联结，构成了一张庞大的网络，其中一个点的扰动可能导致整个网络发生较大变动，在这样的情况下去寻找线性的因果关系基本上是不可能的。有的只是复杂和更加复杂。医学目前所研究的对象，可能就是一个这样的混沌系统，我们往往会根据简单的相关性分析就来推测因果关系，实施“对症下药”。可能调整好这根网络中的一根弦后，其他部分已经开始颤动了。
- 今天的世界已经够复杂了，而明天的一切会变得更加复杂。 ——凯文·凯利《失控》
- ]]></description>
+    <description><![CDATA[演化医学，这个名词确实是第一次听说。本书作者主张从演化的视角审视人体、疾病和衰老，别开生面，启发思考。去年读过一本《消失的微生物》，其作者也]]></description>
 </item>
 </channel>
 </rss>
