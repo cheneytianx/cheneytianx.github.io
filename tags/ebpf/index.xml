@@ -4,7 +4,15 @@
         <link>http://example.org/tags/ebpf/</link>
         <description>ebpf - Tag - Cheneytian&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>yuchentianx@gmail.com (Cheneytian)</managingEditor>
-            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Wed, 17 Aug 2022 22:19:15 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/ebpf/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Fri, 26 Aug 2022 20:51:58 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/ebpf/" rel="self" type="application/rss+xml" /><item>
+    <title>使用 cilium/ebpf 构建 eBPF 程序</title>
+    <link>http://example.org/posts/2022/09/</link>
+    <pubDate>Fri, 26 Aug 2022 20:51:58 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2022/09/</guid>
+    <description><![CDATA[Cilium/ebpf 是纯 go 语言实现的 eBPF 程序开发框架/库，本文记录了使用它完成开发的实践过程，并简要分析了它和其它框架的相同及不同之处。完整代码：https:/]]></description>
+</item>
+<item>
     <title>使用 libbpf 开发 eBPF 程序</title>
     <link>http://example.org/posts/2022/07/</link>
     <pubDate>Wed, 17 Aug 2022 22:19:15 &#43;0800</pubDate>

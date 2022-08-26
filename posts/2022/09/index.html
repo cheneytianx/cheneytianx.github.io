@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>使用 cilium/ebpf 构建 eBPF 程序 - Cheneytian&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="使用 cilium/ebpf 构建 eBPF 程序" />
+<meta property="og:description" content="Cilium/ebpf 是纯 go 语言实现的 eBPF 程序开发框架/库，本文记录了使用它完成开发的实践过程，并简要分析了它和其它框架的相同及不同之处。完整代码：https:/" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2022/09/" />
+<meta property="article:published_time" content="2022-08-26T20:51:58+08:00" />
+<meta property="article:modified_time" content="2022-08-26T20:51:58+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 cilium/ebpf 构建 eBPF 程序"/>
+<meta name="twitter:description" content="Cilium/ebpf 是纯 go 语言实现的 eBPF 程序开发框架/库，本文记录了使用它完成开发的实践过程，并简要分析了它和其它框架的相同及不同之处。完整代码：https:/"/>
+<meta name="application-name" content="x">
+<meta name="apple-mobile-web-app-title" content="x"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/2022/09/" /><link rel="prev" href="http://example.org/posts/2022/08/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "使用 cilium/ebpf 构建 eBPF 程序",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/2022\/09\/"
+        },"genre": "posts","keywords": "ebpf","wordcount":  2662 ,
+        "url": "http:\/\/example.org\/posts\/2022\/09\/","datePublished": "2022-08-26T20:51:58+08:00","dateModified": "2022-08-26T20:51:58+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Cheneytian"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"><i class='fa-solid fa-book'></i> 所有文章 </a><a class="menu-item" href="/tags/"><i class='fa-solid fa-tags'></i> 标签 </a><a class="menu-item" href="/categories/"><i class='fa-regular fa-folder-open'></i> 分类 </a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/"><i class='fa-solid fa-book-open'></i> 读书 </a><a class="menu-item" href="/about"><i class='fa-solid fa-id-card'></i> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title=""><i class='fa-solid fa-book'></i>所有文章</a><a class="menu-item" href="/tags/" title=""><i class='fa-solid fa-tags'></i>标签</a><a class="menu-item" href="/categories/" title=""><i class='fa-regular fa-folder-open'></i>分类</a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/" title=""><i class='fa-solid fa-book-open'></i>读书</a><a class="menu-item" href="/about" title=""><i class='fa-solid fa-id-card'></i>关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">使用 cilium/ebpf 构建 eBPF 程序</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Cheneytian</a></span>&nbsp;<span class="post-category">included in <a href="/categories/ebpf/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>eBPF</a></span></div>
+            <div class="post-meta-line">
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-08-26">2022-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;2662 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;6 minutes&nbsp;
+                <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span> views</span></div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-关于-ciliumebpf-库">1. 关于 cilium/ebpf 库</a></li>
+    <li><a href="#2-ebpf-程序开发">2. eBPF 程序开发</a>
+      <ul>
+        <li><a href="#21-内核部分代码">2.1 内核部分代码</a></li>
+        <li><a href="#22-bpf2go-工具">2.2 bpf2go 工具</a></li>
+        <li><a href="#23-用户空间代码">2.3 用户空间代码</a></li>
+        <li><a href="#24-实现效果">2.4 实现效果</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-总结">3. 总结</a>
+      <ul>
+        <li><a href="#31-ciliumebpf-库的优势">3.1 cilium/ebpf 库的优势</a></li>
+        <li><a href="#32-ciliumebpf-的注意事项">3.2 cilium/ebpf 的注意事项</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>Cilium/ebpf 是纯 go 语言实现的 eBPF 程序开发框架/库，本文记录了使用它完成开发的实践过程，并简要分析了它和其它框架的相同及不同之处。完整代码：<a href="https://github.com/cheneytianx/ebpf_demo/tree/main/cilium_ebpf" target="_blank" rel="noopener noreffer ">https://github.com/cheneytianx/ebpf_demo/tree/main/cilium_ebpf</a></p>
+<h2 id="1-关于-ciliumebpf-库">1. 关于 cilium/ebpf 库</h2>
+<p>如果想开发 eBPF 程序，并且在多台机器上进行部署。那么在开发工具的选择上，libbpf 无疑是最佳选择。libbpf 其实是 linux 内核源码的一部分，位于 <a href="https://github.com/torvalds/linux/tree/master/tools/lib/bpf" target="_blank" rel="noopener noreffer ">tools/lib/bpf/</a> 路径下，它提供了<code>bpf()</code>系统调用的简单封装，是一个轻量级的开发库。</p>
+<p>正因为 libbpf 足够底层，一些现成的工具函数比较少，开发效率会相对低一点。例如，在<code>uprobe</code>类型的 eBPF 程序开发中，目标函数相对 ELF 文件的偏移量需要开发者自己进行计算。</p>
+<p><a href="https://github.com/aquasecurity/libbpfgo" target="_blank" rel="noopener noreffer ">libbpfgo</a> 在 libbpf 基础上提供了一层简单的封装，用户空间的执行逻辑可以使用 Go 语言来开发，相对方便很多。不过，一些核心的 bpf 调用是通过 CGo 来实现的。根据 <a href="https://lpc.events/event/4/contributions/449/attachments/239/529/A_pure_Go_eBPF_library.pdf" target="_blank" rel="noopener noreffer ">该PPT</a> 提供的信息，在调用<code>map_lookup_elem()</code>时，CGo 会增加 10% 的性能开销。</p>
+<p><a href="https://github.com/cilium/ebpf" target="_blank" rel="noopener noreffer ">Cilium/ebpf</a> 是一个用纯 Go 语言实现的库，在提升开发效率的同时，也兼顾了运行性能。下面介绍使用<code>cilium/ebpf</code>开发 eBPF 程序的一般过程。</p>
+<h2 id="2-ebpf-程序开发">2. eBPF 程序开发</h2>
+<p>不论采用什么框架，开发流程一般都是<strong>内核部分程序</strong>开发 + <strong>用户空间程序</strong>开发，使用 MAP 这类数据结构完成数据的<strong>存储</strong>和<strong>传递</strong>。这里，我们 eBPF 程序的功能是：统计一段时间内不同程序触发系统调用的次数，将统计的逻辑放在内核部分程序中，采用 HASH 类型的 MAP 来实现。</p>
+<h3 id="21-内核部分代码">2.1 内核部分代码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">//go:build ignore
+</span><span class="c1"></span>
+<span class="c1">// 导入各种头文件，省略
+</span><span class="c1"></span><span class="kt">char</span> <span class="n">LICENSE</span><span class="p">[]</span> <span class="n">SEC</span><span class="p">(</span><span class="s">&#34;license&#34;</span><span class="p">)</span> <span class="o">=</span> <span class="s">&#34;Dual BSD/GPL&#34;</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="n">__uint</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">BPF_MAP_TYPE_HASH</span><span class="p">);</span>
+    <span class="n">__type</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kt">char</span><span class="p">[</span><span class="mi">16</span><span class="p">]);</span>  <span class="c1">// name
+</span><span class="c1"></span>    <span class="n">__type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">u32</span><span class="p">);</span>
+    <span class="n">__uint</span><span class="p">(</span><span class="n">max_entries</span><span class="p">,</span> <span class="mi">128</span><span class="p">);</span>
+<span class="p">}</span> <span class="n">counter</span> <span class="n">SEC</span><span class="p">(</span><span class="s">&#34;.maps&#34;</span><span class="p">);</span>
+
+<span class="n">SEC</span><span class="p">(</span><span class="s">&#34;raw_tracepoint/sys_enter&#34;</span><span class="p">)</span>
+<span class="kt">int</span> <span class="n">my_bpftrace</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="n">u32</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">bpf_get_current_comm</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">name</span><span class="p">));</span>
+
+    <span class="n">u32</span> <span class="o">*</span><span class="n">exist</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">exist</span> <span class="o">=</span> <span class="n">bpf_map_lookup_elem</span><span class="p">(</span><span class="o">&amp;</span><span class="n">counter</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">exist</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 程序已经统计过，将 cnt+1
+</span><span class="c1"></span>        <span class="n">cnt</span> <span class="o">=</span> <span class="o">*</span><span class="n">exist</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="n">bpf_map_update_elem</span><span class="p">(</span><span class="o">&amp;</span><span class="n">counter</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cnt</span><span class="p">,</span> <span class="n">BPF_ANY</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>因为最后是使用 Go 来编译整个模块，第一行加入了特殊注释，告知 Go 忽略这个<code>.c</code>源文件。这是 go 的编译特性，具体可以参考：<a href="https://pkg.go.dev/cmd/go#hdr-Build_constraints" target="_blank" rel="noopener noreffer ">Build_constraints</a>。</p>
+<h3 id="22-bpf2go-工具">2.2 bpf2go 工具</h3>
+<p>一般来说，内核程序开发完成后，会利用 clang &amp; llvm 将源程序编译成<code>eBPF</code>目标程序。它是一个内核可加载，ELF 格式的二进制文件。随后在用户空间代码中，将这个<code>.o</code>文件加载进内核。</p>
+<p>Cilium/ebpf 采用了和 libbpf + skeleton 相同的思想，将目标文件<code>.o</code>转换成源码的一部分，提供一个结构体和一些方法来抽象内核部分的程序，随后在用户空间代码中就可以直接访问和加载内核程序。关于 libbpf + skeleton 可以参考：<a href="https://www.mankier.com/8/bpftool-gen" target="_blank" rel="noopener noreffer ">bpftool-gen</a> 和 <a href="https://nakryiko.com/posts/libbpf-bootstrap/#the-user-space-side">https://nakryiko.com/posts/libbpf-bootstrap/#the-user-space-side</a> 。下面来看看 bpf2go 是怎样实现同样功能的。</p>
+<p>bpf2go 可以看成 cilium/ebpf 中独立的小工具，定义在：<a href="https://github.com/cilium/ebpf/tree/master/cmd/bpf2go" target="_blank" rel="noopener noreffer ">ebpf/cmd/bpf2go</a>中，我们直接使用 go install 进行安装。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go install github.com/cilium/ebpf/cmd/bpf2go@latest
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./Snipaste_2022-08-26_21-39-51.jpg"
+        data-srcset="./Snipaste_2022-08-26_21-39-51.jpg, ./Snipaste_2022-08-26_21-39-51.jpg 1.5x, ./Snipaste_2022-08-26_21-39-51.jpg 2x"
+        data-sizes="auto"
+        alt="./Snipaste_2022-08-26_21-39-51.jpg"
+        title="./Snipaste_2022-08-26_21-39-51.jpg" /></p>
+<p>结合 <a href="https://github.com/cilium/ebpf/blob/master/cmd/bpf2go/README.md" target="_blank" rel="noopener noreffer ">官方的文档</a> 可知，bpf2go 工具会将<code>*.bpf.c</code>文件转换为<code>.go</code>文件。工具默认会生成<code>*_bpfel.go</code>和<code>*_bpfeb.go</code>两个文件，分别用在采用小端字节序和大端字节序的机器上，一般来说，我们只需要生成第一个，通过 -target bpfel 来控制即可。</p>
+<p>由于我们已经安装了 libbpf 库，添加了很多头文件到系统的默认搜索路径中（/usr/include/bpf/）。如果没有安装 libbpf 库，也可以从其它开源项目中（<a href="https://github.com/cilium/ebpf/tree/master/examples/headers" target="_blank" rel="noopener noreffer ">https://github.com/cilium/ebpf/tree/master/examples/headers</a>）拷贝需要的头文件放入本地的指定路径下，然后在生成 <code>*_bpfel.go</code>代码的指令中使用<code>-I</code>参数进行路径指定。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">GOPACKAGE</span><span class="o">=</span>main bpf2go -cc clang -cflags -O2 -target bpfel count ./count.bpf.c -I&lt;path_to_bpf_headers&gt;
+</code></pre></td></tr></table>
+</div>
+</div><p>这样，项目目录下就多出了<code>.o</code>和<code>.go</code>文件。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./Snipaste_2022-08-26_21-37-27.jpg"
+        data-srcset="./Snipaste_2022-08-26_21-37-27.jpg, ./Snipaste_2022-08-26_21-37-27.jpg 1.5x, ./Snipaste_2022-08-26_21-37-27.jpg 2x"
+        data-sizes="auto"
+        alt="./Snipaste_2022-08-26_21-37-27.jpg"
+        title="./Snipaste_2022-08-26_21-37-27.jpg" /></p>
+<p>官方代码使用的是 go generate 来执行上述命令，关于 go generate 可以参考：<a href="https://go.dev/blog/generate" target="_blank" rel="noopener noreffer ">https://go.dev/blog/generate</a></p>
+<p>生成的<code>.go</code>文件中主要包含如下内容，以结构体的方式对编写的 bpf 程序和定义的 map 进行了抽象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">countObjects</span> <span class="kd">struct</span> <span class="p">{</span>  <span class="c1">// 整个内核部分程序抽象成 countObjects
+</span><span class="c1"></span>    <span class="nx">countPrograms</span>
+    <span class="nx">countMaps</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">countPrograms</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">MyBpftrace</span> <span class="o">*</span><span class="nx">ebpf</span><span class="p">.</span><span class="nx">Program</span> <span class="s">`ebpf:&#34;syscall_count&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">countMaps</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Counter</span> <span class="o">*</span><span class="nx">ebpf</span><span class="p">.</span><span class="nx">Map</span> <span class="s">`ebpf:&#34;counter&#34;`</span>
+<span class="p">}</span>
+
+<span class="c1">//go:embed count_bpfel.o
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">_CountBytes</span> <span class="p">[]</span><span class="kt">byte</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>将 bpf 的<code>.o</code>文件内容以字节序列的形式加载到<code>*_bpfel.go</code>文件的<code>_CountBytes</code>变量中。使用了go 1.16 中提供的 embed 特性，它可以在编译阶段将静态资源文件打包进程序变量中。详情参考：<a href="https://pkg.go.dev/embed" target="_blank" rel="noopener noreffer ">embed package - embed - Go Packages</a></p>
+<p>和 libbpf + skeleton 类似，这样有两个好处。</p>
+<ol>
+<li>内核态代码直接集成到了用户空间程序中，编译完成后只生成一个可执行文件；若要进行分发只需要拷贝这一个可执行文件即可（libbpfgo 库的案例中，.o文件和可执行文件要配合使用）。</li>
+<li>程序启动更快。可执行文件从磁盘一次性加载到内存即可，而分离的<code>.o</code>文件需要在运行时动态加载。</li>
+</ol>
+<h3 id="23-用户空间代码">2.3 用户空间代码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="o">...</span> <span class="c1">// 导入模块，省略
+</span><span class="c1"></span>
+<span class="c1">// 采用 go generate 完成 .go 文件生成
+</span><span class="c1">//go:generate bpf2go -cc clang -cflags -O2 -target bpfel count ./count.bpf.c
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">stopper</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Signal</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nx">signal</span><span class="p">.</span><span class="nf">Notify</span><span class="p">(</span><span class="nx">stopper</span><span class="p">,</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Interrupt</span><span class="p">,</span> <span class="nx">syscall</span><span class="p">.</span><span class="nx">SIGTERM</span><span class="p">)</span>
+
+    <span class="c1">// Unlock resources for eBPF progs
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">rlimit</span><span class="p">.</span><span class="nf">RemoveMemlock</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Load pre-compiled programs and maps into the kernel. Defined in *_bpfel.go
+</span><span class="c1"></span>    <span class="nx">objs</span> <span class="o">:=</span> <span class="nx">countObjects</span><span class="p">{}</span>  <span class="c1">// objs 抽象了整个内核程序
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">loadCountObjects</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">objs</span><span class="p">,</span> <span class="kc">nil</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;loading objects: %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">defer</span> <span class="nx">objs</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+
+    <span class="nx">ops</span> <span class="o">:=</span> <span class="nx">link</span><span class="p">.</span><span class="nx">RawTracepointOptions</span><span class="p">{</span>  
+        <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sys_enter&#34;</span><span class="p">,</span>
+        <span class="nx">Program</span><span class="p">:</span> <span class="nx">objs</span><span class="p">.</span><span class="nx">SyscallCount</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nx">rtp</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">link</span><span class="p">.</span><span class="nf">AttachRawTracepoint</span><span class="p">(</span><span class="nx">ops</span><span class="p">)</span>  <span class="c1">// attach to rawTracepoint
+</span><span class="c1"></span>    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;opening raw_tracepoint: %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Successfully started!\n&#34;</span><span class="p">)</span>
+
+    <span class="o">&lt;-</span><span class="nx">stopper</span>  <span class="c1">// Wait for a signal and close the eBPF prog
+</span><span class="c1"></span>    <span class="nx">rtp</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+ 
+    <span class="kd">var</span> <span class="nx">key</span> <span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="kt">byte</span>  <span class="c1">// 开始输出 map 中的内容
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">val</span> <span class="kt">uint32</span>
+    <span class="nx">mapIter</span> <span class="o">:=</span> <span class="nx">objs</span><span class="p">.</span><span class="nx">Counter</span><span class="p">.</span><span class="nf">Iterate</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="nx">mapIter</span><span class="p">.</span><span class="nf">Next</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">key</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 库提供了非常方便的遍历接口
+</span><span class="c1"></span>        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">key</span><span class="p">[:]),</span> <span class="nx">val</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>用户空间的代码中，可以使用很多 Go 的高级特性，例如 defer 。</p>
+<h3 id="24-实现效果">2.4 实现效果</h3>
+<p>直接使用<code>go build</code>编译出可执行文件。随后运行程序，Ctrl + C 停止程序后，会打印出这段时间内的统计结果。
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./Snipaste_2022-08-26_21-49-14.jpg"
+        data-srcset="./Snipaste_2022-08-26_21-49-14.jpg, ./Snipaste_2022-08-26_21-49-14.jpg 1.5x, ./Snipaste_2022-08-26_21-49-14.jpg 2x"
+        data-sizes="auto"
+        alt="./Snipaste_2022-08-26_21-49-14.jpg"
+        title="./Snipaste_2022-08-26_21-49-14.jpg" /></p>
+<h2 id="3-总结">3. 总结</h2>
+<h3 id="31-ciliumebpf-库的优势">3.1 cilium/ebpf 库的优势</h3>
+<p>cilium/ebpf 是纯 Go 语言实现的库，在用户空间的代码编写中，可以使用很多 Go 语言的高级特性，像 Goroutine，Channel和定时器等。</p>
+<p>同时它也封装了很多和<code>bpf</code>程序相关的接口，例如，遍历 MAP 中的 key 和 value。在 libbpf 中并没有直接遍历 MAP 拿到 key 和 value 的方法，需要自己来实现，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">next</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">bpf_map_get_next_key</span><span class="p">(</span><span class="n">test_map_fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">key</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">next</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">bpf_map_lookup_elem</span><span class="p">(</span><span class="n">test_map_fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">next</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;key: %d, value: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">next</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="32-ciliumebpf-的注意事项">3.2 cilium/ebpf 的注意事项</h3>
+<p>在使用 libbpf + skeleton 的时候，可以使用一个小 trick，在内核部分代码中可以定义一个全局变量，例如<code>gval</code>。这时在生成<code>*.skel.h</code>头文件时，会额外生成一个名为<code>bss</code>的 section 抽象。在用户空间通过<code>skel-&gt;bss.gval</code>可直接读写该变量，进行一些简单的数据交换。目前在 cilium/ebpf 中未见到类似的实现，只抽象出了 maps 和 programs。</p>
+<p>另外，在使用 MAP 数据结构时，内核部分和用户空间所定义变量的内存结构应该保持一致。本文案例中，key 是长度为 16 的字节序列，在用户空间不能定义为 string 类型。</p>
+<p>eBPF 程序有很多种类型，cilium/ebpf 应该是在开发阶段逐步支持了这些类型的程序。这导致不同类型的程序（例如，Rawtracepoint 和 Kprobe）在 attach 时的接口命名风格及使用上并不一致。在使用时，可以去官方的 <a href="https://github.com/cilium/ebpf/tree/master/examples" target="_blank" rel="noopener noreffer ">examples</a> 找到对应类型程序的 attach 方法。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-08-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/ebpf/">ebpf</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/2022/08/" class="prev" rel="prev" title="我们为什么要睡觉"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>我们为什么要睡觉</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.68.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Cheneytian</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"gitalk":{"admin":["cheneytianx"],"clientID":"14fee1b4b3406f3716ca","clientSecret":"37b3ebadb1dd039e4f2b0d640f0f995531f25c33","id":"2022-08-26T20:51:58+08:00","owner":"cheneytianx","repo":"cheneytianx.github.io","title":"使用 cilium/ebpf 构建 eBPF 程序"}}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
