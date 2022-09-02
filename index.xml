@@ -47,6 +47,14 @@
     <description><![CDATA[1. TC 和 eBPF 1.1 TC 简单介绍 TC(Traffic Control) 是 Linux 内核中负责流量控制的模块，早在 eBPF 出现之前，它就存在于内核中了。TC 自身的概念和设计比较复杂，这里不详细介绍。 值得]]></description>
 </item>
 <item>
+    <title>ssh -D 参数的妙用</title>
+    <link>http://example.org/posts/2021/01/</link>
+    <pubDate>Sat, 13 Mar 2021 21:22:54 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2021/01/</guid>
+    <description><![CDATA[1. 背景 在学校使用的服务器连接的是校园网，如果不进行登录认证，只能访问内网资源，无法访问互联网资源。而让服务器登录校园网登录有以下痛点： 每次登]]></description>
+</item>
+<item>
     <title>科技想要什么</title>
     <link>http://example.org/posts/2020/02/</link>
     <pubDate>Tue, 28 Jul 2020 22:18:05 &#43;0800</pubDate>
@@ -77,14 +85,6 @@
     <author>Cheneytian</author>
     <guid>http://example.org/posts/2022/05/</guid>
     <description><![CDATA[为什么有些人年纪轻轻，思想深度却远超常人？ 现在这个时代，我们缺少的不是信息，不是知识，而是认知。认知是人们获取信息，对信息加工和吸收的方式。]]></description>
-</item>
-<item>
-    <title>心智探奇</title>
-    <link>http://example.org/posts/2022/03/</link>
-    <pubDate>Sat, 27 Apr 2019 23:20:51 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2022/03/</guid>
-    <description><![CDATA[物质身体如何产生出有意识的心智？这个问题已经困扰了人们几个世纪。看过很多讨论过意识、大脑和心智的书，从凯文·凯利的《失控》到库兹韦尔的《机器]]></description>
 </item>
 </channel>
 </rss>

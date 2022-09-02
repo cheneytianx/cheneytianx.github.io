@@ -151,7 +151,7 @@
 <span class="p">}</span> <span class="n">counter</span> <span class="n">SEC</span><span class="p">(</span><span class="s">&#34;.maps&#34;</span><span class="p">);</span>
 
 <span class="n">SEC</span><span class="p">(</span><span class="s">&#34;raw_tracepoint/sys_enter&#34;</span><span class="p">)</span>
-<span class="kt">int</span> <span class="n">my_bpftrace</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ctx</span><span class="p">)</span>
+<span class="kt">int</span> <span class="n">syscall_count</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ctx</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
     <span class="n">u32</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>

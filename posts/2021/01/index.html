@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>ssh -D 参数的妙用 - Cheneytian&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="ssh -D 参数的妙用" />
+<meta property="og:description" content="1. 背景 在学校使用的服务器连接的是校园网，如果不进行登录认证，只能访问内网资源，无法访问互联网资源。而让服务器登录校园网登录有以下痛点： 每次登" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2021/01/" />
+<meta property="article:published_time" content="2021-03-13T21:22:54+08:00" />
+<meta property="article:modified_time" content="2022-09-02T21:22:54+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ssh -D 参数的妙用"/>
+<meta name="twitter:description" content="1. 背景 在学校使用的服务器连接的是校园网，如果不进行登录认证，只能访问内网资源，无法访问互联网资源。而让服务器登录校园网登录有以下痛点： 每次登"/>
+<meta name="application-name" content="x">
+<meta name="apple-mobile-web-app-title" content="x"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/2021/01/" /><link rel="prev" href="http://example.org/posts/2020/02/" /><link rel="next" href="http://example.org/posts/2022/02/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "ssh -D 参数的妙用",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/2021\/01\/"
+        },"genre": "posts","wordcount":  1982 ,
+        "url": "http:\/\/example.org\/posts\/2021\/01\/","datePublished": "2021-03-13T21:22:54+08:00","dateModified": "2022-09-02T21:22:54+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Cheneytian"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"><i class='fa-solid fa-book'></i> 所有文章 </a><a class="menu-item" href="/tags/"><i class='fa-solid fa-tags'></i> 标签 </a><a class="menu-item" href="/categories/"><i class='fa-regular fa-folder-open'></i> 分类 </a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/"><i class='fa-solid fa-book-open'></i> 读书 </a><a class="menu-item" href="/about"><i class='fa-solid fa-id-card'></i> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title=""><i class='fa-solid fa-book'></i>所有文章</a><a class="menu-item" href="/tags/" title=""><i class='fa-solid fa-tags'></i>标签</a><a class="menu-item" href="/categories/" title=""><i class='fa-regular fa-folder-open'></i>分类</a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/" title=""><i class='fa-solid fa-book-open'></i>读书</a><a class="menu-item" href="/about" title=""><i class='fa-solid fa-id-card'></i>关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">ssh -D 参数的妙用</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Cheneytian</a></span></div>
+            <div class="post-meta-line">
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2021-03-13">2021-03-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1982 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;
+                <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span> views</span></div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-背景">1. 背景</a></li>
+    <li><a href="#2-国内外研究现状">2. 国内外研究现状</a></li>
+    <li><a href="#3-校园网的认证逻辑">3. 校园网的认证逻辑</a></li>
+    <li><a href="#4-ssh--d-动态转发">4. ssh -D 动态转发</a>
+      <ul>
+        <li><a href="#41-原理介绍">4.1 原理介绍</a></li>
+        <li><a href="#42-使用流程">4.2 使用流程</a></li>
+        <li><a href="#43-校园网认证">4.3 校园网认证</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-结束语">5. 结束语</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-背景">1. 背景</h2>
+<p>在学校使用的服务器连接的是校园网，如果不进行登录认证，只能访问内网资源，无法访问互联网资源。而让服务器登录校园网登录有以下痛点：</p>
+<ul>
+<li>每次登录校园网需要给服务器连接显示器、键盘和鼠标，然后在浏览器中请求登录网站，输入账号密码。</li>
+<li>异常断电后需要重新登录连网；校园网有设备登录数量上限，服务器可能会被挤下线（下线又需重连）。</li>
+<li>服务器离我们日常<del>工作</del>搬砖的地方较远，登录一次非常麻烦。</li>
+</ul>
+<h2 id="2-国内外研究现状">2. 国内外研究现状</h2>
+<p>2019 年 9 月，有了彬锅的校园网登录脚本：<a href="https://github.com/siliconx/hitsz_net" target="_blank" rel="noopener noreffer ">https://github.com/siliconx/hitsz_net</a></p>
+<p>在服务器内运行脚本，通过 Google Chrome 提供的驱动，在无图形界面的环境下，模拟登录请求，即可完成身份认证。</p>
+<p>这种方案的环境配置过程较为繁琐（其实也还好），只能针对某一台服务器进行配置。我所在的课题组有两台服务器，当时每台服务器都单独配置了一遍。如果你所在的课题组财力雄厚，有 10 台服务器……</p>
+<p>同时，存在浏览器驱动和浏览器版本相差太多，功能出现异常的可能性。因为驱动是通过离线包安装，浏览器是用<code>apt</code>管理的，每次用<code>apt</code>更新系统软件，浏览器都会自动更新，多年以后，驱动可能驱不动新版本的浏览器了。</p>
+<p>考虑到在服务器中使用浏览器的需求很少，可以在<code>apt</code>中禁用浏览器自动更新即可，从而保证两者版本的匹配：<a href="https://github.com/siliconx/hitsz_net/issues/1" target="_blank" rel="noopener noreffer ">https://github.com/siliconx/hitsz_net/issues/1</a></p>
+<h2 id="3-校园网的认证逻辑">3. 校园网的认证逻辑</h2>
+<p>前面分析了一堆，当然是为了给更好的方案做一个铺垫，介绍新方法之前，需要对校园网认证的逻辑有一个简单了解。</p>
+<p>首先我们去访问 <a href="http://10.248.98.2/" target="_blank" rel="noopener noreffer ">http://10.248.98.2/</a>，在网页上输入用户名和密码，点击登录，然后我们就可以访问互联网了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./1.png"
+        data-srcset="./1.png, ./1.png 1.5x, ./1.png 2x"
+        data-sizes="auto"
+        alt="./1.png"
+        title="./1.png" /></p>
+<p>对于这个认证系统来说，其实不难猜到它的逻辑。对端的服务器应该是维护了这样一张表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">IP 地址（内网）</th>
+<th align="center">是否认证</th>
+<th align="center">有效时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">10.xxx.xxx.xxx</td>
+<td align="center">是</td>
+<td align="center">xx 分钟</td>
+</tr>
+<tr>
+<td align="center">……</td>
+<td align="center">………</td>
+<td align="center">………</td>
+</tr>
+</tbody>
+</table>
+<p>认证成功后，后面所有通过我这个内网 IP 发出的外网请求，都会被放行，允许访问。<strong>这里的认证是和 IP 绑定上的</strong>，如果我们的另外一台设备（肯定不是当前 IP）没有经过认证，就不能访问外网。</p>
+<h2 id="4-ssh--d-动态转发">4. ssh -D 动态转发</h2>
+<h3 id="41-原理介绍">4.1 原理介绍</h3>
+<p>现在要回归标题了。ssh 我们都用过，-D 参数有啥用呢？直接 Read The Fucking Manual，说得很清楚了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./0.png"
+        data-srcset="./0.png, ./0.png 1.5x, ./0.png 2x"
+        data-sizes="auto"
+        alt="./0.png"
+        title="./0.png" /></p>
+<p>我们会这样使用它：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh -D localhost:port remote_server
+</code></pre></td></tr></table>
+</div>
+</div><p>简单来说就是它开启了一个动态转发的功能，在本地绑定的端口处启动一个 socks 代理，通过它的数据请求都被转发到 remote_server，然后以 remote_server 的名义转发给目标主机。（是不是有点像 FQ）</p>
+<h3 id="42-使用流程">4.2 使用流程</h3>
+<p>不如举个例子，把整个流程走一遍。我手上有如下设备：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./2.png"
+        data-srcset="./2.png, ./2.png 1.5x, ./2.png 2x"
+        data-sizes="auto"
+        alt="./2.png"
+        title="./2.png" /></p>
+<p>首先在我的电脑上执行如下命令，启动一个 socks 服务，输入 ssh 的登录密码即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh -D localhost:2021 cheney@10.249.41.173 -N
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>-D</code> 绑定一个端口，用来动态转发该端口的数据请求。</li>
+<li><code>cheney@10.249.41.173</code> 本质上还是使用的 ssh，这里要认证登录创建 ssh 连接</li>
+<li><code>-N</code> 默认情况下，登录成功会出现一个终端，我们可以在这个终端中输入命令远程控制服务器。这个参数用来禁用该功能，登录只做身份验证，不执行远程命令，此时登录成功啥也不会出现。</li>
+</ul>
+<p>登录成功后，本机的 2021 端口处会启动一个 socks 服务，通过该端口的数据请求都会被转发到 10.249.41.173 来执行。光这样还不行，因为本机上没有哪个程序会往 2021 端口发数据。</p>
+<p>一般情况下，如果我们用浏览器访问一个网站，这个请求是直接被发送出去的。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./3.png"
+        data-srcset="./3.png, ./3.png 1.5x, ./3.png 2x"
+        data-sizes="auto"
+        alt="./3.png"
+        title="./3.png" /></p>
+<p>通过配置 socks 代理，这个 HTTP 请求会被重定向到该 socks 服务，也就是发往 2021 端口。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./4.png"
+        data-srcset="./4.png, ./4.png 1.5x, ./4.png 2x"
+        data-sizes="auto"
+        alt="./4.png"
+        title="./4.png" /></p>
+<p>我在本机的火狐浏览器上进行了配置。火狐要方便一点，有应用级别的代理，修改后只对该应用生效。其他的浏览器好像都是使用的系统代理，修改后影响范围比较大。经过如下配置后，所有使用火狐浏览器产生的HTTP请求，都会被发送到本机的 2021 端口。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./5.png"
+        data-srcset="./5.png, ./5.png 1.5x, ./5.png 2x"
+        data-sizes="auto"
+        alt="./5.png"
+        title="./5.png" /></p>
+<p>发送之后，具体这个请求会被怎样处理，那就要看本地的这个服务到底干了啥。前面提到过（文档截图里也说的很明白），这个请求会被再转一次，转到使用 ssh 连接上的 10.249.41.173 服务器上，让它去做相同的请求。同样的道理，产生的响应也会沿着这条链接发送回来。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./6.png"
+        data-srcset="./6.png, ./6.png 1.5x, ./6.png 2x"
+        data-sizes="auto"
+        alt="./6.png"
+        title="./6.png" /></p>
+<p>玩过小飞机的同学应该都很熟悉这个流程，这里就是借用 ssh 的传输方式实现了一个代理服务器。</p>
+<h3 id="43-校园网认证">4.3 校园网认证</h3>
+<p>怎样用这个逻辑来实现校园网的认证，让服务器连上网呢？执行完上述命令，启动好 socks 服务后，直接在我们的电脑上请求 <a href="http://10.248.98.2/" target="_blank" rel="noopener noreffer ">http://10.248.98.2/</a> 即可。</p>
+<p>为啥？因为按照上述的流程，最终是服务器用它的 IP 去完成了校园网的认证，它的 IP 地址被加到了我们所谓的表中，从而能够访问外网。</p>
+<table>
+<thead>
+<tr>
+<th align="center">IP 地址（内网）</th>
+<th align="center">是否认证</th>
+<th align="center">有效时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>10.249.41.173</strong></td>
+<td align="center">是</td>
+<td align="center">xx 分钟</td>
+</tr>
+<tr>
+<td align="center">……</td>
+<td align="center">………</td>
+<td align="center">………</td>
+</tr>
+</tbody>
+</table>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./7.png"
+        data-srcset="./7.png, ./7.png 1.5x, ./7.png 2x"
+        data-sizes="auto"
+        alt="./7.png"
+        title="./7.png" /></p>
+<h2 id="5-结束语">5. 结束语</h2>
+<p>彬锅的自动登录脚本非常容易理解，模拟了用户进行网络认证的行为，充分体现了脚本自动化的便利。</p>
+<p>今天介绍的方法几乎不用在服务器上进行任何配置，只要能登录 ssh 即可，只不过方法比较巧妙，逻辑不太容易想明白。</p>
+<p>一直都觉得计算机网络是最实用的技术，但是比较难学，琢磨琢磨这些底层原理，不比背八股文有意思多了&gt;_&lt;</p>
+<p>socks 服务也可以直接在服务器上启动，实现相同的功能；对应的参数怎么设置，有兴趣的同行们可以试一下。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-09-02</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/2020/02/" class="prev" rel="prev" title="科技想要什么"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>科技想要什么</a>
+            <a href="/posts/2022/02/" class="next" rel="next" title="eBPF TC 程序实践">eBPF TC 程序实践<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.68.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Cheneytian</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"gitalk":{"admin":["cheneytianx"],"clientID":"14fee1b4b3406f3716ca","clientSecret":"37b3ebadb1dd039e4f2b0d640f0f995531f25c33","id":"2021-03-13T21:22:54+08:00","owner":"cheneytianx","repo":"cheneytianx.github.io","title":"ssh -D 参数的妙用"}}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
