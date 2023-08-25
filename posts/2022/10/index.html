@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Go 基本数据类型 - Cheneytian&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="Go 基本数据类型" />
+<meta property="og:description" content="1. 整型 整形可细分为两种，有符号整型和无符号整型。Go 为整型变量提供了 4 种 size，分别占用 1，2，4 和 8 字节的内存空间。 1 2 int8 int16 int32 int64 uint8 uint16 uint32 uint64" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2022/10/" />
+<meta property="article:published_time" content="2022-09-07T22:11:12+08:00" />
+<meta property="article:modified_time" content="2022-09-07T22:11:12+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 基本数据类型"/>
+<meta name="twitter:description" content="1. 整型 整形可细分为两种，有符号整型和无符号整型。Go 为整型变量提供了 4 种 size，分别占用 1，2，4 和 8 字节的内存空间。 1 2 int8 int16 int32 int64 uint8 uint16 uint32 uint64"/>
+<meta name="application-name" content="x">
+<meta name="apple-mobile-web-app-title" content="x"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/2022/10/" /><link rel="prev" href="http://example.org/posts/2022/09/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go 基本数据类型",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/2022\/10\/"
+        },"genre": "posts","keywords": "go","wordcount":  1099 ,
+        "url": "http:\/\/example.org\/posts\/2022\/10\/","datePublished": "2022-09-07T22:11:12+08:00","dateModified": "2022-09-07T22:11:12+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Cheneytian"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"><i class='fa-solid fa-book'></i> 所有文章 </a><a class="menu-item" href="/tags/"><i class='fa-solid fa-tags'></i> 标签 </a><a class="menu-item" href="/categories/"><i class='fa-regular fa-folder-open'></i> 分类 </a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/"><i class='fa-solid fa-book-open'></i> 读书 </a><a class="menu-item" href="/about"><i class='fa-solid fa-id-card'></i> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title=""><i class='fa-solid fa-book'></i>所有文章</a><a class="menu-item" href="/tags/" title=""><i class='fa-solid fa-tags'></i>标签</a><a class="menu-item" href="/categories/" title=""><i class='fa-regular fa-folder-open'></i>分类</a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/" title=""><i class='fa-solid fa-book-open'></i>读书</a><a class="menu-item" href="/about" title=""><i class='fa-solid fa-id-card'></i>关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Go 基本数据类型</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Cheneytian</a></span>&nbsp;<span class="post-category">included in <a href="/categories/learning-go/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Learning Go</a></span></div>
+            <div class="post-meta-line">
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-09-07">2022-09-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1099 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;
+                <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span> views</span></div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-整型">1. 整型</a></li>
+    <li><a href="#2-浮点型">2. 浮点型</a></li>
+    <li><a href="#3-布尔类型">3. 布尔类型</a></li>
+    <li><a href="#4-字符串">4. 字符串</a>
+      <ul>
+        <li><a href="#41-raw-string">4.1 Raw string</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-类型转换">5. 类型转换</a>
+      <ul>
+        <li><a href="#51-整数浮点之间转换">5.1 整数浮点之间转换</a></li>
+        <li><a href="#52-数字与字符串互转">5.2 数字与字符串互转</a>
+          <ul>
+            <li><a href="#521-integer-to-string">5.2.1 integer to string</a></li>
+            <li><a href="#522-string-to-integer">5.2.2 string to integer</a></li>
+          </ul>
+        </li>
+        <li><a href="#53-字符串转字节序列">5.3 字符串转字节序列</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-整型">1. 整型</h2>
+<p>整形可细分为两种，<strong>有符号整型</strong>和<strong>无符号整型</strong>。Go 为整型变量提供了 4 种 size，分别占用 1，2，4 和 8 字节的内存空间。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kt">int8</span> <span class="kt">int16</span> <span class="kt">int32</span> <span class="kt">int64</span>
+<span class="kt">uint8</span> <span class="kt">uint16</span> <span class="kt">uint32</span> <span class="kt">uint64</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>此外，还有两种更常用的整型变量（<code>int</code>和<code>uint</code>），但它们所占用的内存大小是不确定的，依赖运行程序的操作系统位数。</p>
+<h2 id="2-浮点型">2. 浮点型</h2>
+<p>浮点数只有两种类型：float32 和 float64。</p>
+<h2 id="3-布尔类型">3. 布尔类型</h2>
+<p>布尔类型在 Go 种是专门的一种类型，两种取值：<code>true</code>和<code>false</code>。</p>
+<p>布尔类型和数值类型之间没有隐式转换，不能像 C 语言那样把数值类型当作条件逻辑使用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="mi">1</span>
+<span class="k">if</span> <span class="nx">a</span> <span class="p">{</span>  <span class="c1">// non-boolean condition in if statement
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Integer as bool&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>也不能显示类型转换。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="mi">1</span>
+<span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// cannot convert a (variable of type int) to type bool
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Integer as bool&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>必要时只能这么恶心一下。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// bool to integer
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">btoi</span><span class="p">(</span><span class="nx">b</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">b</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="c1">// integer to bool
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">itob</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">i</span> <span class="o">!=</span> <span class="mi">0</span>    
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="4-字符串">4. 字符串</h2>
+<p>字符串是一种特殊的切片类型，语意上可以看成由 Unicode 码点（<code>rune</code>）构成的序列。从底层来看，只是字节类型构成的序列。</p>
+<p><code>rune</code>在底层是 uint32；<code>byte</code> 在底层是 uint8。单独创造两种类型是为了在语义上更加明确。</p>
+<p>Go 的字符串采用的是<code>UTF-8</code>变长编码，简单来说，一个英文字符占 1 字节，中文字符占 3 字节。</p>
+<p>字符串的一些操作都是面向底层的<code>byte</code>来完成的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="s">&#34;hello, world!&#34;</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>  <span class="c1">// 13 bytes
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">s</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>  <span class="c1">// &#39;h&#39; and &#39;o&#39;
+</span><span class="c1"></span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>  <span class="c1">// &#34;hello&#34;, with s[0] included, s[5] excluded
+</span></code></pre></td></tr></table>
+</div>
+</div><p>字符串不能进行修改，这使得多个字符串对象共享底层内容非常安全。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./1.png"
+        data-srcset="./1.png, ./1.png 1.5x, ./1.png 2x"
+        data-sizes="auto"
+        alt="./1.png"
+        title="./1.png" /></p>
+<p>当遇到中英混合的字符串时，这么处理就会出现问题，需要通过rune把视角转换为 Unicode 码点。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="s">&#34;hello你好&#34;</span>
+
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>  <span class="c1">// len == 11
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>  <span class="c1">// helloä½ å¥½
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="nx">runes</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">rune</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">runes</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>  <span class="c1">// len == 7
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c&#34;</span><span class="p">,</span> <span class="nx">runes</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>  <span class="c1">// hello你好
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// 直接通过 range
+</span><span class="c1"></span><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">r</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%c&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>  <span class="c1">// hello你好
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// import &#34;unicode/utf8&#34;
+</span><span class="c1"></span><span class="nx">rune_len</span> <span class="o">:=</span> <span class="nx">utf8</span><span class="p">.</span><span class="nf">RuneCountInString</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">rune_len</span><span class="p">)</span>  <span class="c1">// 7
+</span></code></pre></td></tr></table>
+</div>
+</div><h3 id="41-raw-string">4.1 Raw string</h3>
+<p>Raw string 不会对内容做任何转义，几乎是所见即所得，常用来表示一些特定场景下的文本内容。例如，HTML。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">rawS</span> <span class="o">:=</span> <span class="s">`**\t\n
+</span><span class="s">**`</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">rawS</span><span class="p">)</span>
+
+<span class="nx">Output</span><span class="p">:</span>
+<span class="o">**</span><span class="err">\</span><span class="nx">t</span><span class="err">\</span><span class="nx">n</span>
+<span class="o">**</span><span class="mi">33</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="5-类型转换">5. 类型转换</h2>
+<h3 id="51-整数浮点之间转换">5.1 整数浮点之间转换</h3>
+<p>本质上都属于数值型，可以直接转换，只是可能会有精度损失或溢出的问题。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">a</span> <span class="kt">int32</span> <span class="p">=</span> <span class="mi">128</span>
+<span class="kd">var</span> <span class="nx">b</span> <span class="kt">int8</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// 溢出
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">c</span> <span class="kt">int64</span> <span class="p">=</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// ok
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span>  <span class="c1">// 128 -128 128
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">f</span> <span class="kt">float32</span> <span class="p">=</span> <span class="mf">1.234</span>
+<span class="kd">var</span> <span class="nx">d</span> <span class="kt">int8</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">,</span> <span class="nx">d</span><span class="p">)</span>  <span class="c1">// 1 1.234
+</span></code></pre></td></tr></table>
+</div>
+</div><h3 id="52-数字与字符串互转">5.2 数字与字符串互转</h3>
+<p>以整数为例，小数及其它类型查阅 api 可知。</p>
+<h4 id="521-integer-to-string">5.2.1 integer to string</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span> <span class="o">:=</span> <span class="mi">123</span>
+<span class="nx">y</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span>
+<span class="nx">z</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">Itoa</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>以不同进制转换。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// func FormatInt(i int64, base int) string
+</span><span class="c1"></span><span class="nx">x</span> <span class="o">:=</span> <span class="mi">27</span>
+<span class="nx">s</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">FormatInt</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1">// &#34;11011&#34;
+</span></code></pre></td></tr></table>
+</div>
+</div><h4 id="522-string-to-integer">5.2.2 string to integer</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">n</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">Atoi</span><span class="p">(</span><span class="s">&#34;1234&#34;</span><span class="p">);</span>
+<span class="c1">// ParseInt(s string, base int, bitSize int) (i int64, err error)
+</span><span class="c1"></span><span class="nx">m</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">ParseInt</span><span class="p">(</span><span class="s">&#34;1234&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="53-字符串转字节序列">5.3 字符串转字节序列</h3>
+<p>字符串是不可修改的，如果需要对其中的某个字符进行修改，通常是转为 byte 切片，完成修改后再转换回来。如果字符串种包含中文字符，就转为 rune 切片。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="s">&#34;hello&#34;</span>
+<span class="nx">b</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-09-07</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/go/">go</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/2022/09/" class="prev" rel="prev" title="使用 cilium/ebpf 构建 eBPF 程序"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>使用 cilium/ebpf 构建 eBPF 程序</a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.68.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Cheneytian</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"gitalk":{"admin":["cheneytianx"],"clientID":"14fee1b4b3406f3716ca","clientSecret":"37b3ebadb1dd039e4f2b0d640f0f995531f25c33","id":"2022-09-07T22:11:12+08:00","owner":"cheneytianx","repo":"cheneytianx.github.io","title":"Go 基本数据类型"}}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
