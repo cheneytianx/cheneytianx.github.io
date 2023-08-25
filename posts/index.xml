@@ -21,6 +21,14 @@
     <description><![CDATA[Cilium/ebpf 是纯 go 语言实现的 eBPF 程序开发框架/库，本文记录了使用它完成开发的实践过程，并简要分析了它和其它框架的相同及不同之处。完整代码：https:/]]></description>
 </item>
 <item>
+    <title>[读书] AI 3.0</title>
+    <link>http://example.org/posts/2023/01/</link>
+    <pubDate>Sat, 20 Aug 2022 22:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/01/</guid>
+    <description><![CDATA[“为什么不问问 chatgpt 呢？” 最近的工作和生活中，或多或少都被 chatgpt 刷屏了。看到一些自媒体的夸大宣传后，我很惊慌。莫非在我每天打工搞钱的这段日子里，AI]]></description>
+</item>
+<item>
     <title>[读书] 我们为什么要睡觉</title>
     <link>http://example.org/posts/2022/08/</link>
     <pubDate>Sat, 20 Aug 2022 22:05:02 &#43;0800</pubDate>
@@ -75,14 +83,6 @@
     <author>Cheneytian</author>
     <guid>http://example.org/posts/2020/03/</guid>
     <description><![CDATA[KK 三部曲，终于全部看完。造词大师，类比鬼才，故事高手，预测专家，科技先知。这应该是我能脱口而出对 KK 的印象了。虽然自己是个工科生，但我却从没有]]></description>
-</item>
-<item>
-    <title>[读书] 科技想要什么</title>
-    <link>http://example.org/posts/2020/02/</link>
-    <pubDate>Tue, 28 Jul 2020 22:18:05 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2020/02/</guid>
-    <description><![CDATA[不得不说，KK 是一个很善于讲故事的人。不论是《失控》，还是这本《科技想要什么》，书的开头都是一段小故事，像一位老友在向你娓娓道来。正文内容也]]></description>
 </item>
 </channel>
 </rss>
