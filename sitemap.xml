@@ -2,19 +2,20 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>http://example.org/categories/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
-            <loc>http://example.org/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/2023/02/</loc><lastmod>2022-05-04T22:05:02&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/categories/</loc><lastmod>2023-03-22T22:05:02&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/</loc><lastmod>2023-03-22T22:05:02&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/</loc><lastmod>2023-03-22T22:05:02&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/categories/%E8%AF%BB%E4%B9%A6/</loc><lastmod>2023-03-22T22:05:02&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/2023/01/</loc><lastmod>2023-03-22T22:05:02&#43;08:00</lastmod></url><url>
             <loc>http://example.org/tags/go/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
             <loc>http://example.org/posts/2022/10/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
             <loc>http://example.org/categories/learning-go/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
-            <loc>http://example.org/posts/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
             <loc>http://example.org/tags/</loc><lastmod>2022-09-07T22:11:12&#43;08:00</lastmod></url><url>
             <loc>http://example.org/categories/ebpf/</loc><lastmod>2022-08-26T20:51:58&#43;08:00</lastmod></url><url>
             <loc>http://example.org/tags/ebpf/</loc><lastmod>2022-08-26T20:51:58&#43;08:00</lastmod></url><url>
             <loc>http://example.org/posts/2022/09/</loc><lastmod>2022-08-26T20:51:58&#43;08:00</lastmod></url><url>
-            <loc>http://example.org/posts/2023/01/</loc><lastmod>2022-08-20T22:05:02&#43;08:00</lastmod></url><url>
             <loc>http://example.org/posts/2022/08/</loc><lastmod>2022-08-20T22:05:02&#43;08:00</lastmod></url><url>
-            <loc>http://example.org/categories/%E8%AF%BB%E4%B9%A6/</loc><lastmod>2022-09-02T22:35:30&#43;08:00</lastmod></url><url>
             <loc>http://example.org/tags/libbpf/</loc><lastmod>2022-08-19T22:19:15&#43;08:00</lastmod></url><url>
             <loc>http://example.org/posts/2022/07/</loc><lastmod>2022-08-19T22:19:15&#43;08:00</lastmod></url><url>
             <loc>http://example.org/tags/wsl/</loc><lastmod>2022-08-16T21:49:24&#43;08:00</lastmod></url><url>
