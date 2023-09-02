@@ -4,13 +4,29 @@
         <link>http://example.org/categories/%E8%AF%BB%E4%B9%A6/</link>
         <description>读书 - Category - Cheneytian&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>yuchentianx@gmail.com (Cheneytian)</managingEditor>
-            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Thu, 04 May 2023 22:05:02 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E8%AF%BB%E4%B9%A6/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Sun, 09 Jul 2023 22:05:02 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E8%AF%BB%E4%B9%A6/" rel="self" type="application/rss+xml" /><item>
+    <title>[读书] 理性</title>
+    <link>http://example.org/posts/2023/04/</link>
+    <pubDate>Sun, 09 Jul 2023 22:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/04/</guid>
+    <description><![CDATA[平克果然没有让人失望。 读了两遍。第一遍是利用零碎时间，忙里偷闲看完，读完觉得内容很杂乱，有些翻译问题非常影响阅读。第二遍是花了时间专门研究，]]></description>
+</item>
+<item>
     <title>[读书] 互联网人</title>
     <link>http://example.org/posts/2023/02/</link>
     <pubDate>Thu, 04 May 2023 22:05:02 &#43;0800</pubDate>
     <author>Cheneytian</author>
     <guid>http://example.org/posts/2023/02/</guid>
     <description><![CDATA[我高考那一年，计算机、软件工程好像还都是大学里的冷门专业。有不少同学因为刚刚过学校的录取分数线被调剂到这两个专业。结果恰好赶上移动互联网飞速]]></description>
+</item>
+<item>
+    <title>[读书] 千脑智能</title>
+    <link>http://example.org/posts/2023/03/</link>
+    <pubDate>Fri, 21 Apr 2023 22:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/03/</guid>
+    <description><![CDATA[计算机是如何运行的？这是一个有确定答案的问题；而人的大脑是如何运行的？这仍是一个存在许多未知的谜题。 理工科的很多东西都是按照数理逻辑建立起来]]></description>
 </item>
 <item>
     <title>[读书] AI 3.0</title>
@@ -67,22 +83,6 @@
     <author>Cheneytian</author>
     <guid>http://example.org/posts/2020/01/</guid>
     <description><![CDATA[我读大学时，不务正业，看了很多心理学方面的书，好像是从图书馆偶遇《机器人叛乱》这本书开始，我就知道了斯坦诺维奇这位有趣心理学家。 早在 20 年前，]]></description>
-</item>
-<item>
-    <title>[读书] 认知突围</title>
-    <link>http://example.org/posts/2022/05/</link>
-    <pubDate>Fri, 03 May 2019 23:55:27 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2022/05/</guid>
-    <description><![CDATA[为什么有些人年纪轻轻，思想深度却远超常人？ 现在这个时代，我们缺少的不是信息，不是知识，而是认知。认知是人们获取信息，对信息加工和吸收的方式。]]></description>
-</item>
-<item>
-    <title>[读书] 心智探奇</title>
-    <link>http://example.org/posts/2022/03/</link>
-    <pubDate>Sat, 27 Apr 2019 23:20:51 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2022/03/</guid>
-    <description><![CDATA[物质身体如何产生出有意识的心智？这个问题已经困扰了人们几个世纪。看过很多讨论过意识、大脑和心智的书，从凯文·凯利的《失控》到库兹韦尔的《机器]]></description>
 </item>
 </channel>
 </rss>

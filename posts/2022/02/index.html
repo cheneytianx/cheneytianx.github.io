@@ -116,14 +116,14 @@
 <p>TC(Traffic Control) 是 Linux 内核中负责流量控制的模块，早在 eBPF 出现之前，它就存在于内核中了。TC 自身的概念和设计比较复杂，这里不详细介绍。</p>
 <p>值得关注的是，从 4.1 的内核版本开始，内核中增加了一些 TC 上的挂载点，支持让 eBPF 程序动态加载到对应位置，运行一些自定义的逻辑。</p>
 <p>那么，TC 在内核网络栈中的位置如下（图片来自 <a href="https://dl.acm.org/doi/abs/10.1145/3281411.3281443" target="_blank" rel="noopener noreffer ">这篇论文</a>）：</p>
-<p><img
+<img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="/posts/2022/02/pic_1.jpg"
-        data-srcset="/posts/2022/02/pic_1.jpg, /posts/2022/02/pic_1.jpg 1.5x, /posts/2022/02/pic_1.jpg 2x"
+        data-src="./pic_1.jpg"
+        data-srcset="./pic_1.jpg, ./pic_1.jpg 1.5x, ./pic_1.jpg 2x"
         data-sizes="auto"
-        alt="/posts/2022/02/pic_1.jpg"
-        title="/posts/2022/02/pic_1.jpg" width="608" height="807" /></p>
+        alt="./pic_1.jpg"
+        title="./pic_1.jpg" width="50%" />
 <h3 id="12-ebpf-中的-tc-类型">1.2 eBPF 中的 TC 类型</h3>
 <h4 id="121-classifier-和-action">1.2.1 classifier 和 action</h4>
 <p>eBPF 的程序类型决定了程序可以调用的内核辅助函数（helper functions）和运行上下文（ctx）。eBPF 支持的类型可以查看 <a href="https://lwn.net/Articles/740157/" target="_blank" rel="noopener noreffer ">A thorough introduction to eBPF [LWN.net]</a> 中 eBPF program types 小节。其中，和 TC 相关的类型如下：</p>
