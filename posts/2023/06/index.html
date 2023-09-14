@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>关于僵尸进程 - Cheneytian&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="关于僵尸进程" />
+<meta property="og:description" content="1 进程状态 在使用top或ps查看进程信息时，有一列字段用来标识进程当前的状态。以ps为例： 进程状态一般用单个大写字母来表示，具体每种状态表示" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2023/06/" />
+<meta property="article:published_time" content="2023-09-01T00:05:02+08:00" />
+<meta property="article:modified_time" content="2023-09-01T00:05:02+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="关于僵尸进程"/>
+<meta name="twitter:description" content="1 进程状态 在使用top或ps查看进程信息时，有一列字段用来标识进程当前的状态。以ps为例： 进程状态一般用单个大写字母来表示，具体每种状态表示"/>
+<meta name="application-name" content="x">
+<meta name="apple-mobile-web-app-title" content="x"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/2023/06/" /><link rel="prev" href="http://example.org/posts/2023/04/" /><link rel="next" href="http://example.org/posts/2023/05/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "关于僵尸进程",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/posts\/2023\/06\/"
+        },"genre": "posts","keywords": "linux, 进程","wordcount":  1636 ,
+        "url": "http:\/\/example.org\/posts\/2023\/06\/","datePublished": "2023-09-01T00:05:02+08:00","dateModified": "2023-09-01T00:05:02+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Cheneytian"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"><i class='fa-solid fa-book'></i> 所有文章 </a><a class="menu-item" href="/tags/"><i class='fa-solid fa-tags'></i> 标签 </a><a class="menu-item" href="/categories/"><i class='fa-regular fa-folder-open'></i> 分类 </a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/"><i class='fa-solid fa-book-open'></i> 读书 </a><a class="menu-item" href="/about"><i class='fa-solid fa-id-card'></i> 关于 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Cheneytian&#39;s Blog">Cheneytian&#39;s Blog</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title=""><i class='fa-solid fa-book'></i>所有文章</a><a class="menu-item" href="/tags/" title=""><i class='fa-solid fa-tags'></i>标签</a><a class="menu-item" href="/categories/" title=""><i class='fa-regular fa-folder-open'></i>分类</a><a class="menu-item" href="/categories/%E8%AF%BB%E4%B9%A6/" title=""><i class='fa-solid fa-book-open'></i>读书</a><a class="menu-item" href="/about" title=""><i class='fa-solid fa-id-card'></i>关于</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">关于僵尸进程</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Cheneytian</a></span>&nbsp;<span class="post-category">included in <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
+            <div class="post-meta-line">
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-01">2023-09-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1636 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;
+                <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span> views</span></div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-进程状态">1 进程状态</a></li>
+    <li><a href="#2-僵尸进程如何产生">2 僵尸进程如何产生</a></li>
+    <li><a href="#3-如何处理僵尸进程">3 如何处理僵尸进程</a>
+      <ul>
+        <li><a href="#31-直接同步调用-wait">3.1 直接同步调用 wait()</a></li>
+        <li><a href="#32-使用信号机制异步处理">3.2 使用信号机制异步处理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="1-进程状态">1 进程状态</h2>
+<p>在使用<code>top</code>或<code>ps</code>查看进程信息时，有一列字段用来标识进程当前的状态。以<code>ps</code>为例：</p>
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./1.png"
+        data-srcset="./1.png, ./1.png 1.5x, ./1.png 2x"
+        data-sizes="auto"
+        alt="./1.png"
+        title="./1.png" width="100%" />
+<p>进程状态一般用单个大写字母来表示，具体每种状态表示什么含义，为什么<code>ps</code>显示出来的状态有多个字母，这个查阅官方文档（<a href="https://man7.org/linux/man-pages/man1/ps.1.html" target="_blank" rel="noopener noreffer ">https://man7.org/linux/man-pages/man1/ps.1.html</a>）中的<strong>PROCESS STATE CODE</strong>部分即可。</p>
+<p>这些命令本质上是从进程的<code>/proc/PID/status</code>目录下读取的状态信息，因此也可参考 <a href="https://man7.org/linux/man-pages/man5/proc.5.html">https://man7.org/linux/man-pages/man5/proc.5.html</a> 了解所有状态的演化发展情况。</p>
+<p>几种常见进程状态含义如下：</p>
+<ul>
+<li>R：进程正在运行或处于可运行状态，只要有时间片了，就会调度到 CPU 上运行</li>
+<li>S：可中断的 sleep 状态，进程调用了 sleep 或在等待网络 IO 事件</li>
+<li>D：不可中断的 sleep 状态，一般是进程在等待磁盘 IO</li>
+<li>T：收到了 STOP 信号，处于暂停状态</li>
+<li>t：进程被 ptrace 调试导致的暂停（GDB 底层用的 ptrace）</li>
+<li><strong>Z：僵尸进程</strong>，进程的生命周期已经结束了，但内核中还保留了一些关于它的信息，没有被彻底回收</li>
+</ul>
+<h2 id="2-僵尸进程如何产生">2 僵尸进程如何产生</h2>
+<p>进程状态为 Z 的进程，就是僵尸进程。</p>
+<p>当一个进程终止（正常或异常）后，该进程使用的系统资源会被回收，只在内核中保留了很少的信息，主要记录了一些退出状态和退出原因。这个时候进程状态就会切换为 Z，需要父进程调用 <a href="https://man7.org/linux/man-pages/man2/waitpid.2.html" target="_blank" rel="noopener noreffer ">wait()</a> 来让系统彻底回收资源。</p>
+<p>这么设计是因为在一些场景中，父进程需要感知子进程退出的原因，调用 <a href="https://man7.org/linux/man-pages/man2/waitpid.2.html" target="_blank" rel="noopener noreffer ">wait()</a> 的同时也能拿到子进程退出时的信息，这就是为什么在 bash 中可以通过<code>echo $?</code>拿到上一条命令的退出码。</p>
+<p>但是在一些特殊情况下，父进程没能正确回收子进程的资源（例如，执行到什么逻辑的时候卡住了），此时子进程会一直维持 Z 状态，这时就能通过系统命令捕获到僵尸进程了。</p>
+<p>虽然僵尸进程不会被调度，大部分系统资源也已经释放，但是它会占用一个进程 PID，如果系统中有大量的僵尸进程产生，会耗尽 PID 资源，导致新进程无法派生。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;father process is stucking...</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process pid: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，父进程在 sleep，而子进程已经退出了，此时状态为 Z，成为了僵尸进程。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./2.png"
+        data-srcset="./2.png, ./2.png 1.5x, ./2.png 2x"
+        data-sizes="auto"
+        alt="./2.png"
+        title="./2.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./3.png"
+        data-srcset="./3.png, ./3.png 1.5x, ./3.png 2x"
+        data-sizes="auto"
+        alt="./3.png"
+        title="./3.png" /></p>
+<p>但是过一会，再使用<code>ps</code>查看进程状态时，发现僵尸进程已经消失了。这是因为当父进程退出后，僵尸子进程会挂到<code>systemd</code>进程下，<code>systemd</code>会周期调用<code>wait()</code>来回收子进程，最终清除了刚才的僵尸进程。</p>
+<p><a href="https://unix.stackexchange.com/questions/155012/how-does-linux-handles-zombie-process">https://unix.stackexchange.com/questions/155012/how-does-linux-handles-zombie-process</a></p>
+<h2 id="3-如何处理僵尸进程">3 如何处理僵尸进程</h2>
+<h3 id="31-直接同步调用-wait">3.1 直接同步调用 wait()</h3>
+<p>最直接的办法就是在父进程的逻辑中调用 wait() 来回收终止的子进程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;father process is stucking...</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">child_pid</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>  <span class="c1">// 这里传入非 NULL 可以获取更多子进程信息，这里不讨论
+</span><span class="c1"></span>        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process(%d) is finished, reap it</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">child_pid</span><span class="p">);</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process pid: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./4.png"
+        data-srcset="./4.png, ./4.png 1.5x, ./4.png 2x"
+        data-sizes="auto"
+        alt="./4.png"
+        title="./4.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./5.png"
+        data-srcset="./5.png, ./5.png 1.5x, ./5.png 2x"
+        data-sizes="auto"
+        alt="./5.png"
+        title="./5.png" /></p>
+<p>这个时候就没有僵尸进程了。</p>
+<p>直接使用 <a href="https://man7.org/linux/man-pages/man2/waitpid.2.html" target="_blank" rel="noopener noreffer ">wait()</a> 调用有如下几个缺点：</p>
+<ul>
+<li>该调用是阻塞的，如果子进程一直不退出，父进程调用后就会卡住，无法执行其它逻辑</li>
+<li>如果有多个子进程，该调用无法指定回收并获取具体的某个子进程，每次可操作的都是最先终止的</li>
+</ul>
+<p>于是可以使用 <a href="https://man7.org/linux/man-pages/man2/waitpid.2.html" target="_blank" rel="noopener noreffer ">watipid()</a> 来进行更好的控制。它拥有更多的控制参数，可以让父进程只阻塞在特定的子进程上，也可以设置为不阻塞，通过轮询的的方式来回收子进程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// father
+</span><span class="c1"></span>        <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;father process do something else...</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WNOHANG</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process(%d) is finished, reap it</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process pid: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="./6.png"
+        data-srcset="./6.png, ./6.png 1.5x, ./6.png 2x"
+        data-sizes="auto"
+        alt="./6.png"
+        title="./6.png" width="100%" />
+<h3 id="32-使用信号机制异步处理">3.2 使用信号机制异步处理</h3>
+<p>当有子进程终止时，内核会向它的父进程发送一个<code>SIGCHLD</code>信号，默认该信号是被忽略的，我们可以给该信号注册一个 handler，在 handler 的逻辑中回收子进程。</p>
+<p>当信号处理函数被调用时，接下来的<code>SIGCHLD</code>会被默认屏蔽，如果在处理信号的时候，又有子进程退出了，产生的信号就捕获不到了。因此，在 handler 中要考虑尽可能回收所有子进程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">void</span> <span class="nf">handle_child_exit</span><span class="p">(</span><span class="kt">int</span> <span class="n">sig</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">((</span><span class="n">ret</span> <span class="o">=</span> <span class="n">waitpid</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WNOHANG</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process(%d) is finished, reap it</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+        <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">signal</span><span class="p">(</span><span class="n">SIGCHLD</span><span class="p">,</span> <span class="n">handle_child_exit</span><span class="p">);</span>  <span class="c1">// call this before fork()
+</span><span class="c1"></span>
+    <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// father
+</span><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;father process do something else...</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;child process pid: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-09-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/linux/">linux</a>,&nbsp;<a href="/tags/%E8%BF%9B%E7%A8%8B/">进程</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/2023/04/" class="prev" rel="prev" title="[读书] 理性"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>[读书] 理性</a>
+            <a href="/posts/2023/05/" class="next" rel="next" title="[读书] 噪声">[读书] 噪声<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="gitalk" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://github.com/gitalk/gitalk"></a>Gitalk</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.68.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Cheneytian</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"gitalk":{"admin":["cheneytianx"],"clientID":"14fee1b4b3406f3716ca","clientSecret":"37b3ebadb1dd039e4f2b0d640f0f995531f25c33","id":"2023-09-01T00:05:02+08:00","owner":"cheneytianx","repo":"cheneytianx.github.io","title":"关于僵尸进程"}}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

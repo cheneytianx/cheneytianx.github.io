@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>进程 - Tag - Cheneytian&#39;s Blog</title>
+        <link>http://example.org/tags/%E8%BF%9B%E7%A8%8B/</link>
+        <description>进程 - Tag - Cheneytian&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>yuchentianx@gmail.com (Cheneytian)</managingEditor>
+            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Fri, 01 Sep 2023 00:05:02 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E8%BF%9B%E7%A8%8B/" rel="self" type="application/rss+xml" /><item>
+    <title>关于僵尸进程</title>
+    <link>http://example.org/posts/2023/06/</link>
+    <pubDate>Fri, 01 Sep 2023 00:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/06/</guid>
+    <description><![CDATA[1 进程状态 在使用top或ps查看进程信息时，有一列字段用来标识进程当前的状态。以ps为例： 进程状态一般用单个大写字母来表示，具体每种状态表示]]></description>
+</item>
+</channel>
+</rss>

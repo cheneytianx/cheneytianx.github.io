@@ -4,9 +4,25 @@
         <link>http://example.org/</link>
         <description>This is my cool site</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>yuchentianx@gmail.com (Cheneytian)</managingEditor>
-            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Sun, 09 Jul 2023 22:05:02 &#43;0800</lastBuildDate>
+            <webMaster>yuchentianx@gmail.com (Cheneytian)</webMaster><lastBuildDate>Sat, 02 Sep 2023 00:05:02 &#43;0800</lastBuildDate>
             <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>[读书] 噪声</title>
+    <link>http://example.org/posts/2023/05/</link>
+    <pubDate>Sat, 02 Sep 2023 00:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/05/</guid>
+    <description><![CDATA[今年高考结束后，很多学生在填报志愿的时候又发出了“一分压倒千人”的感慨。如何判断一位学生的学习结果，如何判断一个位学生是否该被某所大学录取？]]></description>
+</item>
+<item>
+    <title>关于僵尸进程</title>
+    <link>http://example.org/posts/2023/06/</link>
+    <pubDate>Fri, 01 Sep 2023 00:05:02 &#43;0800</pubDate>
+    <author>Cheneytian</author>
+    <guid>http://example.org/posts/2023/06/</guid>
+    <description><![CDATA[1 进程状态 在使用top或ps查看进程信息时，有一列字段用来标识进程当前的状态。以ps为例： 进程状态一般用单个大写字母来表示，具体每种状态表示]]></description>
+</item>
+<item>
     <title>[读书] 理性</title>
     <link>http://example.org/posts/2023/04/</link>
     <pubDate>Sun, 09 Jul 2023 22:05:02 &#43;0800</pubDate>
@@ -69,22 +85,6 @@
     <author>Cheneytian</author>
     <guid>http://example.org/posts/2022/07/</guid>
     <description><![CDATA[1. eBPF 程序的工作流程 一般来说，eBPF程序分为用户空间程序和内核程序两部分。 内核程序以eBPF字节码的形式运行在虚拟机中。虚拟机执行字节码的过]]></description>
-</item>
-<item>
-    <title>在 WSL 上使用 eBPF</title>
-    <link>http://example.org/posts/2022/06/</link>
-    <pubDate>Tue, 16 Aug 2022 21:49:24 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2022/06/</guid>
-    <description><![CDATA[1. 什么是 WSL WSL(Windows Subsystem for Linux) 可以理解为 Windows 为 Linux 提供的一个子系统。在Win系统上，对于基本的业务开发，WSL可以满足我们对 Linux 操作系统的基本需求，而不是重新]]></description>
-</item>
-<item>
-    <title>eBPF TC 程序实践</title>
-    <link>http://example.org/posts/2022/02/</link>
-    <pubDate>Sat, 13 Aug 2022 23:40:48 &#43;0800</pubDate>
-    <author>Cheneytian</author>
-    <guid>http://example.org/posts/2022/02/</guid>
-    <description><![CDATA[1. TC 和 eBPF 1.1 TC 简单介绍 TC(Traffic Control) 是 Linux 内核中负责流量控制的模块，早在 eBPF 出现之前，它就存在于内核中了。TC 自身的概念和设计比较复杂，这里不详细介绍。 值得]]></description>
 </item>
 </channel>
 </rss>
