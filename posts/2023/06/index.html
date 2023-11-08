@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/posts\/2023\/06\/"
-        },"genre": "posts","keywords": "linux, 进程","wordcount":  1636 ,
+        },"genre": "posts","keywords": "linux, 进程","wordcount":  1680 ,
         "url": "http:\/\/example.org\/posts\/2023\/06\/","datePublished": "2023-09-01T00:05:02+08:00","dateModified": "2023-09-01T00:05:02+08:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
@@ -70,7 +70,7 @@
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">关于僵尸进程</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Cheneytian</a></span>&nbsp;<span class="post-category">included in <a href="/categories/linux/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Linux</a></span></div>
             <div class="post-meta-line">
-                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-01">2023-09-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1636 words&nbsp;
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-09-01">2023-09-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1680 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;
                 <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span> views</span></div>
         </div><div class="details toc" id="toc-static"  data-kept="">
@@ -82,9 +82,14 @@
   <ul>
     <li><a href="#1-进程状态">1 进程状态</a></li>
     <li><a href="#2-僵尸进程如何产生">2 僵尸进程如何产生</a></li>
+    <li><a href="#hahahugoshortcode-s1-hbhb">HAHAHUGOSHORTCODE-s1-HBHB</a></li>
     <li><a href="#3-如何处理僵尸进程">3 如何处理僵尸进程</a>
       <ul>
         <li><a href="#31-直接同步调用-wait">3.1 直接同步调用 wait()</a></li>
+      </ul>
+    </li>
+    <li><a href="#hahahugoshortcode-s3-hbhb">HAHAHUGOSHORTCODE-s3-HBHB</a>
+      <ul>
         <li><a href="#32-使用信号机制异步处理">3.2 使用信号机制异步处理</a></li>
       </ul>
     </li>
@@ -106,8 +111,8 @@
 <ul>
 <li>R：进程正在运行或处于可运行状态，只要有时间片了，就会调度到 CPU 上运行</li>
 <li>S：可中断的 sleep 状态，进程调用了 sleep 或在等待网络 IO 事件</li>
-<li>D：不可中断的 sleep 状态，一般是进程在等待磁盘 IO</li>
-<li>T：收到了 STOP 信号，处于暂停状态</li>
+<li>D：不可中断的 sleep 状态，一般是进程在等待磁盘 IO（这种一般也 kill 不掉，除非阻塞解除）</li>
+<li>T：收到了 STOP 信号，处于暂停状态（在命令行中按下<code>Ctrl+z</code>就会让进程进入这个状态）</li>
 <li>t：进程被 ptrace 调试导致的暂停（GDB 底层用的 ptrace）</li>
 <li><strong>Z：僵尸进程</strong>，进程的生命周期已经结束了，但内核中还保留了一些关于它的信息，没有被彻底回收</li>
 </ul>
@@ -156,22 +161,22 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>可以看到，父进程在 sleep，而子进程已经退出了，此时状态为 Z，成为了僵尸进程。</p>
-<p><img
+<h2 id="hahahugoshortcode-s1-hbhb"><img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="./2.png"
         data-srcset="./2.png, ./2.png 1.5x, ./2.png 2x"
         data-sizes="auto"
         alt="./2.png"
-        title="./2.png" /></p>
-<p><img
+        title="./2.png" width="100%" /></h2>
+<img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="./3.png"
         data-srcset="./3.png, ./3.png 1.5x, ./3.png 2x"
         data-sizes="auto"
         alt="./3.png"
-        title="./3.png" /></p>
+        title="./3.png" width="100%" />
 <p>但是过一会，再使用<code>ps</code>查看进程状态时，发现僵尸进程已经消失了。这是因为当父进程退出后，僵尸子进程会挂到<code>systemd</code>进程下，<code>systemd</code>会周期调用<code>wait()</code>来回收子进程，最终清除了刚才的僵尸进程。</p>
 <p><a href="https://unix.stackexchange.com/questions/155012/how-does-linux-handles-zombie-process">https://unix.stackexchange.com/questions/155012/how-does-linux-handles-zombie-process</a></p>
 <h2 id="3-如何处理僵尸进程">3 如何处理僵尸进程</h2>
@@ -221,22 +226,22 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p><img
+</div><h2 id="hahahugoshortcode-s3-hbhb"><img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="./4.png"
         data-srcset="./4.png, ./4.png 1.5x, ./4.png 2x"
         data-sizes="auto"
         alt="./4.png"
-        title="./4.png" /></p>
-<p><img
+        title="./4.png" width="100%" /></h2>
+<img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="./5.png"
         data-srcset="./5.png, ./5.png 1.5x, ./5.png 2x"
         data-sizes="auto"
         alt="./5.png"
-        title="./5.png" /></p>
+        title="./5.png" width="100%" />
 <p>这个时候就没有僵尸进程了。</p>
 <p>直接使用 <a href="https://man7.org/linux/man-pages/man2/waitpid.2.html" target="_blank" rel="noopener noreffer ">wait()</a> 调用有如下几个缺点：</p>
 <ul>
